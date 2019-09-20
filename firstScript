@@ -20,116 +20,62 @@ var URLbase="https://docs.google.com/spreadsheets/d/";
 var fileID=currentSheetTab.getRange(i+1,14).getValue();
 var profileURL=URLbase + fileID;
 var entityName=currentSheetTab.getRange(i+1,3).getValue();
+var entityType=currentSheetTab.getRange(i+1,5).getValue();
+var QAcompleted=currentSheetTab.getRange(i+1,31).getValue();
+var QAstatus=currentSheetTab.getRange(i+1,18).getValue();
 
-if (correctionStatus.getValue()=="") {
-        
+var todayDate=new Date();
+var millisPerWeek=8*1000*24*60*60;
+//var olderThanAWeek=new Date(todayDate.getTime() - QAcompleted.getTime() - millisPerWeek); 
+var olderThanAWeek=new Date(todayDate.getTime() - millisPerWeek);
+  
+  if (QAstatus=="Done" && correctionStatus.getValue()=="" && QAcompleted!=0 && olderThanAWeek-QAcompleted>=0){
+  
         var email="";
         var RAName=currentSheetTab.getRange(i+1,2).getValue();
-        var subject="Pending QAs";
+        var subject="Pending " + entityType;
         var message="You have QAs pending, please complete them when you have a moment: " + entityName + " " + profileURL;
         var messageStatus="Email OK";
 
         switch (RAName){
-    case "Lv, Flora":
-      email="danqing.lv@dowjones.com";
+    case "Surname1, Name1":
+      email="email1@dowjones.com";
       break;
-    case "Garcia-Bragado, Oscar":
-        email="oscar.garcia-bragadogarzo@dowjones.com";
+    case "Surname2, Name2":
+        email="email2@dowjones.com";
         break;
-    case "Soerensen, Mona":
-      email="mona.soerensen@dowjones.com";
+    case "Surname3, Name3":
+      email="email3@dowjones.com";
       break;
-    case "Zhu, Cherry":
-      email="jiayao.zhu@dowjones.com";
-      break;
-    case "Shinoda, Atsuko":
-      email="atsuko.shinoda@dowjones.com";
-      break;
-    case "Lin, Stephanie":
-      email="stephanie.lin@dowjones.com";
-      break;
-    case "Wang, Ruoying":
-      email="ruoying.wang@dowjones.com";
-      break;
-    case "Faustino, Sofia":
-      email="sofia.faustino@dowjones.com";
-      break;
-    case "Sauer, Natalie":
-      email="natalie.sauer@dowjones.com";
-      break;
-    case "Ramirez, Natalia":
-      email="natalia.ramirez@dowjones.com";
-      break;
-    case "Cachau, Matthieu":
-      email="Matthieu.Cachau@dowjones.com";
-      break;
-    case "Smatanova, Maria":
-      email="maria.smatanova@dowjones.com";
-      break;
-    case "Lamuedra, Maria":
-      email="maria.lamuedragarijo@dowjones.com";
-      break;
-    case "Guo, Ivy":
-      email="ivy.guo@dowjones.com";
-      break;
-    case "Meraldi, Federica":
-      email="federica.meraldi@dowjones.com";
-      break;
-    case "Jiang, Fengwei":
-      email="fengwei.jiang@dowjones.com";
-      break;
-    case "Cerron, Sergio":
-      email="sergio.cerron@dowjones.com";
-      break;   
-    case "Cuttica, Florencia":
-      email="florencia.cuttica@dowjones.com";
-      break;  
-    case "Daryanani, Vibha":
-      email="Vibha.Daryanani@dowjones.com";
-      break;  
-    case "Haley, Michael":
-      email="michael.haley@dowjones.com";
-      break;  
-    case "Metzler, Antoni":
-      email="kacper.metzler@dowjones.com";
-      break; 
-    case "Bisbal Arias, Marc":
-      email="marc.bisbalarias@dowjones.com";
-      break;
-    case "Amaral Rohter, Sonia":
-      email="sonia.amaralrohter@dowjones.com";
-      break;
-    case "Cohen, Jonathan":
-      email="jonathan.cohen@dowjones.com";
-      break;
-    case "Castia, Matteo":
-      email="matteo.castia@dowjones.com";     
-      break;
-    case "Zhang, Adela":
-      email="adela.zhang@dowjones.com";
-      break;
-    case "Xu, Yayi":
-      email="yayi.xu@dowjones.com";
-      break
     default:
-      email="marc.bisbalarias@dowjones.com";
+      email="myemail@dowjones.com";
       subject="Invalid email";
       message="A valid email couldn't be found to send this QA: " + entityName + " " + profileURL;
       messageStatus="Invalid email";
       break;   
 };        
         sendReminder(currentSheetTab,email,subject,message);
-        currentSheetTab.getRange(i+1,39).setValue(messageStatus);
+        currentSheetTab.getRange(i+1,6).setValue(messageStatus);
         
-} else if (correctionStatus.getValue()!="" && correctionStatus.getValue()!="Done" && correctionStatus.getValue()!="Pending"){
+} else if (QAstatus=="Done" && correctionStatus.getValue()!="" && correctionStatus.getValue()!="Done" && correctionStatus.getValue()!="Pending" && olderThanAWeek-QAcompleted>=0){
 
-        var errorEmail="marc.bisbalarias@dowjones.com";
+        var errorEmail="myemail@dowjones.com";
         var errorSubject="Invalid correction status";
         var errorMessage="There was an error sending this QA: " + entityName + " " + profileURL;
         var errorMessageStatus="Invalid correction status";
         sendWrongEmail(currentSheetTab,errorEmail,errorSubject,errorMessage);
-        currentSheetTab.getRange(i+1,39).setValue(errorMessageStatus);
+        currentSheetTab.getRange(i+1,6).setValue(errorMessageStatus);
+      
+} else if (QAstatus=="Done" && correctionStatus.getValue()=="" && QAcompleted==0){
+
+var timeEmail="myemail@dowjones.com";
+var timeSubject="Missing time";
+var timeMessage="There was an error sending this QA: " + entityName + " " + profileURL;
+var errorTime="Time is missing";
+sendTimeEmail(currentSheetTab,timeEmail,timeSubject,timeMessage);
+currentSheetTab.getRange(i+1,6).setValue(errorTime);
 }
+
 }};
 
 function sendReminder(currentSheetTab,email,subject,message){
@@ -138,4 +84,9 @@ MailApp.sendEmail(email,subject,message);
 
 function sendWrongEmail(currentSheetTab,errorEmail,errorSubject,errorMessage){      
 MailApp.sendEmail(errorEmail,errorSubject,errorMessage);
+};
+
+
+function sendTimeEmail(currentSheetTab,timeEmail,timeSubject,timeMessage){
+MailApp.sendEmail(timeEmail,timeSubject,timeMessage);
 };
