@@ -6,12 +6,4 @@ var formatDate=Utilities.formatDate(new Date(),"GMT", "MM-dd-YYYY"); // today's 
 var newDocName=formatDate + " backup of file"; // name for the copy we're creating
 var backup=DriveApp.getFileById("rand0mL1st0fnumb3rsAnDl3tt3r5").makeCopy(newDocName,destFolder);
 
-var file,files=DriveApp.getFilesByName(newDocName);
-
-if (files.hasNext()){
-file=files.next();
-} else {
-return "";
-};
-
 }
