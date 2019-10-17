@@ -1,4 +1,4 @@
-function prepareInfo() {
+function Kaji() {
   
   var ss=SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
   var range=ss.getDataRange();
@@ -6,12 +6,11 @@ function prepareInfo() {
   var lastRow=range.getLastRow()-1;
   var lastCol=range.getLastColumn();
   var sendToKaji=[""];
-  //var sendToArmands=[""];
   var todayDate=new Date();
   var threeDays=3*1000*24*60*60;
   var todayPlusThree=new Date(todayDate.getTime() + threeDays);
   var editorToKaji=[""];
-  //var editorToArmands=[""];
+  var realMessage=[""];
   
   for (var x=1;x<=lastRow;x++){
   
@@ -25,35 +24,63 @@ function prepareInfo() {
   var status=ss.getRange(x+7,18).getValue();
   var email="marc.bisbalarias@dowjones.com";
   var subject="Quality Monitoring due soon";
-  //var message=editor + ": " + monthFormat + " QM is due on " + formatDueDate + ".";
-  var message=editorToKaji.name + " QMs are due soon.";
 
-  storeToKaji(ss,status,sendToKaji,monitor,todayPlusThree,threeDays,dueDate,editorToKaji,editor);
-  //storeToArmands(ss,status,sendToArmands,monitor,todayPlusThree,threeDays,dueDate,editorToArmands,editor);
-}
+KajiInfo(ss,status,monitor,todayDate,todayPlusThree,dueDate,editor,formatDueDate,editorToKaji,x,realMessage);
+};
 
-  sendEmails(email,subject,message);
+MailApp.sendEmail(email,subject,realMessage);
 
-}
+};
 
-function storeToKaji(ss,status,monitor,todayPlusThree,threeDays,dueDate,editorToKaji,editor,persona){ // problem: only editor info appears, we'd need more arrays but unsure how to make info readable; comma at start of array
+function KajiInfo(ss,status,monitor,todayDate,todayPlusThree,dueDate,editor,formatDueDate,editorToKaji,x,realMessage){
 if (status==="To Be Monitored" && monitor==="Kaji Senescal" && todayPlusThree-dueDate>=0){
-var persona={name:editor,date:dueDate};
+var persona={name:editor,date:formatDueDate};
 editorToKaji.push(persona);
-}}
+var message=editorToKaji[x].name + " QMs are due on " + editorToKaji[x].date + "\n";
+realMessage.push(message);
+}
+};
 
-/*
-function storeToArmands(ss,status,sendToKaji,monitor,todayPlusThree,threeDays,dueDate,editorToArmands,editor){
+function Armands() {
+  
+  var ss=SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  var range=ss.getDataRange();
+  var values=range.getValues();
+  var lastRow=range.getLastRow()-1;
+  var lastCol=range.getLastColumn();
+  var sendToKaji=[""];
+  var todayDate=new Date();
+  var threeDays=3*1000*24*60*60;
+  var todayPlusThree=new Date(todayDate.getTime() + threeDays);
+  var editorToArmands=[""];
+  var realMessage2=[""];
+  
+  for (var y=1;y<=lastRow;y++){
+  
+  var month=ss.getRange(y+7,6).getValue();
+  var monthFormat=Utilities.formatDate(new Date(month),"GMT","dd-MMM-YYYY");
+  var editor=ss.getRange(y+7,3).getValue();
+  var dueDate=ss.getRange(y+7,23).getValue();
+  var formatDueDate=Utilities.formatDate(new Date(dueDate),"GMT","dd-MMM-YYYY"); // wasn't working as var formatDueDate=Utilities.formatDate(dueDate,"GMT","dd-MMM-YYYY")
+  var monitor=ss.getRange(y+7,21).getValue(); // was giving me problem because cell was WRAPPED!
+  var userID=ss.getRange(y+7,2).getValue();
+  var status=ss.getRange(y+7,18).getValue();
+  var email="marc.bisbalarias@dowjones.com";
+  var subject="Quality Monitoring due soon";
+
+ArmandsInfo(ss,status,monitor,todayDate,todayPlusThree,dueDate,editor,formatDueDate,editorToArmands,y,realMessage2);
+};
+
+MailApp.sendEmail(email,subject,realMessage2);
+
+};
+
+
+function ArmandsInfo(ss,status,monitor,todayDate,todayPlusThree,dueDate,editor,formatDueDate,editorToArmands,y,realMessage2){
 if (status==="To Be Monitored" && monitor==="Armands Nevedomskis" && todayPlusThree-dueDate>=0){
-var persona={name:editor,date:dueDate};
-editorToArmands.push(persona);
-}};
-*/
-
-function sendEmails(email,subject,message){
-
-//if (editorToKaji!=""){
-MailApp.sendEmail(email,subject,message);
-//} else if (editorToArmands!=""){
-//MailApp.sendEmail(email,subject,message);
+var persona2={name2:editor,date2:formatDueDate};
+editorToArmands.push(persona2);
+var message2=editorToArmands[y].name2 + " QMs are due on " + editorToArmands[y].date2 + "\n";
+realMessage2.push(message2);
+}
 }
