@@ -30,83 +30,17 @@ function getEmailInfo() {
             var messageStatus = "Email OK";
 
             switch (RAName) {
-                case "Lv, Flora":
-                    email = "danqing.lv@dowjones.com";
+                case "Name":
+                    email = "name1@dowjones.com";
                     break;
-                case "Garcia-Bragado, Oscar":
-                    email = "oscar.garcia-bragadogarzo@dowjones.com";
+                case "Name2":
+                    email = "name2@dowjones.com";
                     break;
-                case "Zhu, Cherry":
-                    email = "jiayao.zhu@dowjones.com";
-                    break;
-                case "Shinoda, Atsuko":
-                    email = "atsuko.shinoda@dowjones.com";
-                    break;
-                case "Lin, Stephanie":
-                    email = "stephanie.lin@dowjones.com";
-                    break;
-                case "Wang, Ruoying":
-                    email = "ruoying.wang@dowjones.com";
-                    break;
-                case "Faustino, Sofia":
-                    email = "sofia.faustino@dowjones.com";
-                    break;
-                case "Sauer, Natalie":
-                    email = "natalie.sauer@dowjones.com";
-                    break;
-                case "Ramirez, Natalia":
-                    email = "natalia.ramirez@dowjones.com";
-                    break;
-                case "Cachau, Matthieu":
-                    email = "Matthieu.Cachau@dowjones.com";
-                    break;
-                case "Smatanova, Maria":
-                    email = "maria.smatanova@dowjones.com";
-                    break;
-                case "Lamuedra, Maria":
-                    email = "maria.lamuedragarijo@dowjones.com";
-                    break;
-                case "Guo, Ivy":
-                    email = "ivy.guo@dowjones.com";
-                    break;
-                case "Meraldi, Federica":
-                    email = "federica.meraldi@dowjones.com";
-                    break;
-                case "Jiang, Fengwei":
-                    email = "fengwei.jiang@dowjones.com";
-                    break;
-                case "Cerron, Sergio":
-                    email = "sergio.cerron@dowjones.com";
-                    break;
-                case "Cuttica, Florencia":
-                    email = "florencia.cuttica@dowjones.com";
-                    break;
-                case "Daryanani, Vibha":
-                    email = "Vibha.Daryanani@dowjones.com";
-                    break;
-                case "Haley, Michael":
-                    email = "michael.haley@dowjones.com";
-                    break;
-                case "Metzler, Antoni":
-                    email = "kacper.metzler@dowjones.com";
-                    break;
-                case "Bisbal Arias, Marc":
-                    email = "marc.bisbalarias@dowjones.com";
-                    break;
-                case "Cohen, Jonathan":
-                    email = "jonathan.cohen@dowjones.com";
-                    break;
-                case "Castia, Matteo":
-                    email = "matteo.castia@dowjones.com";
-                    break;
-                case "Zhang, Adela":
-                    email = "adela.zhang@dowjones.com";
-                    break;
-                case "Xu, Yayi":
-                    email = "yayi.xu@dowjones.com";
+                case "Name3":
+                    email = "name3@dowjones.com";
                     break;
                 default:
-                    email = "marc.bisbalarias@dowjones.com";
+                    email = "myemail@dowjones.com";
                     subject = "Invalid email";
                     message = "A valid email couldn't be found to send this QA: " + entityName + " " + profileURL;
                     messageStatus = "Invalid email";
@@ -117,7 +51,7 @@ function getEmailInfo() {
 
         } else if (QAstatus == "Done" && correctionStatus.getValue() != "" && correctionStatus.getValue() != "Done" && correctionStatus.getValue() != "Pending" && olderThanAWeek - QAcompleted >= 0) {
 
-            var errorEmail = "marc.bisbalarias@dowjones.com";
+            var errorEmail = "myemail@dowjones.com";
             var errorSubject = "Invalid correction status";
             var errorMessage = "There was an error sending this QA: " + entityName + " " + profileURL;
             var errorMessageStatus = "Invalid correction status";
@@ -126,7 +60,7 @@ function getEmailInfo() {
 
         } else if (QAstatus == "Done" && correctionStatus.getValue() == "" && QAcompleted == 0) {
 
-            var timeEmail = "marc.bisbalarias@dowjones.com";
+            var timeEmail = "myemail@dowjones.com";
             var timeSubject = "Missing time";
             var timeMessage = "There was an error sending this QA: " + entityName + " " + profileURL;
             var errorTime = "Time is missing";
