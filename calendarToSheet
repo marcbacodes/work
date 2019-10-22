@@ -15,7 +15,7 @@ function myCalendar() {
         var eventTitle = events[x].getTitle(); // gets title of event
         var eventDate = events[x].getStartTime(); // gets time of the event
         var formatDate = Utilities.formatDate(eventDate, "GMT", "MM/dd/YYYY"); // format date 
-        ss.getRange(x + 2, 2).setValue(eventTitle); // puts info on desired cells
-        ss.getRange(x + 2, 1).setValue(eventDate); 
+        ss.getRange(lastRow + x, 2).setValue(eventTitle); // puts info starting at the next empty cell
+        ss.getRange(lastRow + x, 2).setValue(eventTitle);
     }
 }
