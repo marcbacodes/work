@@ -1,0 +1,21 @@
+function myCalendar() {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getSheets()[19];
+    var getRange = ss.getDataRange();
+    var getValues = getRange.getValues();
+    var lastRow = getRange.getLastRow() - 1;
+
+    var now = new Date();
+    var aWeekAgo = new Date(now.getTime() - (8 * 60 * 60 * 24 * 1000)); // gets the date of seven days ago
+    var cal = CalendarApp.getCalendarById("myemail@dowjones.com"); // defines calendar
+    var events = cal.getEvents(aWeekAgo, now); // gets events from last week to today
+    var numOfEvents = events.length;
+
+    for (var x = 1; x < events.length; x++) {
+        var eventTitle = events[x].getTitle(); // gets title of event
+        var eventDate = events[x].getStartTime(); // gets time of the event
+        var formatDate = Utilities.formatDate(eventDate, "GMT", "MM/dd/YYYY"); // format date 
+        ss.getRange(x + 2, 2).setValue(eventTitle); // puts info on desired cells
+        ss.getRange(x + 2, 1).setValue(eventDate); 
+    }
+}
