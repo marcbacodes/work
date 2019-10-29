@@ -1,0 +1,78 @@
+function prepareInfo() {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var range = ss.getDataRange();
+    var values = range.getValues();
+    var lastRow = range.getLastRow();
+    var lastCol = range.getLastColumn();
+    var todayDate = new Date();
+    var threeDays = 3 * 1000 * 24 * 60 * 60;
+    var todayPlusThree = new Date(todayDate.getTime() + threeDays);
+    var messages = [];
+
+    for (var x = 1; x <= lastRow; x++) {
+        if (ss.getRange(x + 7, 3).getValue() == "")
+            break;
+
+        var month = ss.getRange(x + 7, 6).getValue();
+        var monthFormat = Utilities.formatDate(new Date(month), "GMT", "MMM-YYYY");
+        var editor = ss.getRange(x + 7, 3).getValue();
+        var dueDate = ss.getRange(x + 7, 23).getValue(); // should this date must be formatted similar to MM-dd-YYYY?
+        var formatDueDate = Utilities.formatDate(new Date(dueDate), "GMT", "dd-MMM-YYYY"); // wasn't working as var formatDueDate=Utilities.formatDate(dueDate,"GMT","dd-MMM-YYYY")
+        var monitor = ss.getRange(x + 7, 21).getValue(); // was giving me problem because cell was WRAPPED!
+        var status = ss.getRange(x + 7, 18).getValue();
+        var QM_ID = ss.getRange(x + 7, 1).getValue();
+        var DMI_userID = ss.getRange(x + 7, 2).getValue();
+
+        var message = ComposeMessage(status, monitor, todayPlusThree, dueDate, editor, formatDueDate, monthFormat, QM_ID, DMI_userID);
+        var recipient = GetRecipient(monitor);
+
+        StoreMessageToRecipient(messages, message, recipient);
+    }
+
+    SendEmails(messages);
+};
+
+function SendEmails(messages) {
+
+    if (messages == null)
+        return;
+
+    for (var recipent in messages) {
+        MailApp.sendEmail(recipent, "Quality Monitoring due soon", messages[recipent]);
+    }
+}
+
+function StoreMessageToRecipient(messages, message, recipient) {
+    if (message == null)
+        return;
+
+    if (messages[recipient] == undefined)
+        messages[recipient] = "";
+
+    messages[recipient] += message;
+
+}
+
+function ComposeMessage(status, monitor, todayPlusThree, dueDate, editor, formatDueDate, monthFormat, QM_ID, DMI_userID) {
+
+    if (status === "To Be Monitored" && dueDate == "") {
+        MailApp.sendEmail("myemail@dowjones.com", "QM due date error", "Due date is missing." + "\n" + "QM ID: " + QM_ID + "; DMI user ID: " + DMI_userID + "; editor: " + editor);
+    } else if (status === "To Be Monitored" && monitor == "" && todayPlusThree - dueDate >= 0) {
+        MailApp.sendEmail("myemail@dowjones.com", "QM monitor error", "Monitor is missing." + "\n" + "QM ID: " + QM_ID + "; DMI user ID: " + DMI_userID + "; editor: " + editor);
+    } else if (status === "To Be Monitored" && monitor != "" && todayPlusThree - dueDate >= 0) {
+        return editor + " " + monthFormat + " QM is due on " + formatDueDate + "\n";
+    }
+    return null;
+}
+
+function GetRecipient(monitor) {
+    switch (monitor) {
+        case "Name Surname":
+            return "name@dowjones.com";
+        case "Name2 Surname2":
+            return "name2@dowjones.com";
+        default:
+            return "myemail@dowjones.com";
+    }
+}
