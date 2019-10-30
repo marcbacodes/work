@@ -43,7 +43,7 @@ function copyPaste() {
     var destinationSS = SpreadsheetApp.openById(file.getId());
     var destinationSheet = destinationSS.getSheets()[1];
     var destinationRange = destinationSS.getDataRange();
-    var destLastRow = sheetRange.getLastRow() - 1;
+    var destLastRow = destinationRange.getLastRow() - 39; // not sure why lastRow is 40
     //var newDestLastRow = destinationSheet.getDataRange().getValues().length;
 
     for (var x = 1; x <= lastRow; x++) {
@@ -82,23 +82,22 @@ function copyPaste() {
 
         if (formatMonth == nowMonth && entityType == "EntCo") {
 
-            destinationSheet.getRange(destLastRow + x, 1).setValue(currentMonth);
-            destinationSheet.getRange(destLastRow + x, 2).setValue(entityName);
-            destinationSheet.getRange(destLastRow + x, 4).setValue(entityType);
-            destinationSheet.getRange(destLastRow + x, 5).setValue(profileUpdateDate);
-            destinationSheet.getRange(destLastRow + x, 6).setValue(inputsEdits);
-            destinationSheet.getRange(destLastRow + x, 7).setValue(noRounds);
-            destinationSheet.getRange(destLastRow + x, 8).setValue(noMgmt);
-            destinationSheet.getRange(destLastRow + x, 9).setValue(scoreCopy);
-            destinationSheet.getRange(destLastRow + x, 10).setValue(precision);
-            destinationSheet.getRange(destLastRow + x, 11).setValue(weightedPrecision);
-            destinationSheet.getRange(destLastRow + x, 12).setValue(recall);
-            destinationSheet.getRange(destLastRow + x, 13).setValue(weightedRecall);
-            destinationSheet.getRange(destLastRow + x, 14).setValue(unscoredErrors);
-            destinationSheet.getRange(destLastRow + x, 15).setValue(suggestions);
-            destinationSheet.getRange(destLastRow + x, 16).setValue(errorMap);
-            destinationSheet.getRange(destLastRow + x, 17).setValue(DNumber);
-
+            destinationSheet.getRange(x + 1, 1).setValue(currentMonth);
+            destinationSheet.getRange(x + 1, 2).setValue(entityName);
+            destinationSheet.getRange(x + 1, 4).setValue(entityType);
+            destinationSheet.getRange(x + 1, 5).setValue(profileUpdateDate);
+            destinationSheet.getRange(x + 1, 6).setValue(inputsEdits);
+            destinationSheet.getRange(x + 1, 7).setValue(noRounds);
+            destinationSheet.getRange(x + 1, 8).setValue(noMgmt);
+            destinationSheet.getRange(x + 1, 9).setValue(scoreCopy);
+            destinationSheet.getRange(x + 1, 10).setValue(precision);
+            destinationSheet.getRange(x + 1, 11).setValue(weightedPrecision);
+            destinationSheet.getRange(x + 1, 12).setValue(recall);
+            destinationSheet.getRange(x + 1, 13).setValue(weightedRecall);
+            destinationSheet.getRange(x + 1, 14).setValue(unscoredErrors);
+            destinationSheet.getRange(x + 1, 15).setValue(suggestions);
+            destinationSheet.getRange(x + 1, 16).setValue(errorMap);
+            destinationSheet.getRange(x + 1, 17).setValue(DNumber);
         }
     }
 }
