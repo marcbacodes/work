@@ -1,0 +1,60 @@
+function pullMAs_PVAL() {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var range = ss.getDataRange();
+    var values = range.getValues();
+    var lastRow = range.getLastRow();
+    var lastCol = range.getLastColumn();
+
+    var date = new Date();
+    var yesterday = new Date(date);
+    yesterday.setDate(date.getDate() - 1);
+    var yestFormat = Utilities.formatDate(new Date(yesterday), "GMT", "YYYYMMdd");
+    var fileName = "QA Report " + yestFormat;
+
+    var folderID = "1Nb5wqd0JuhowDiKy6ABMjz8JreLY3csb";
+
+    var file, files = DriveApp.getFilesByName("QA Report " + yestFormat);
+
+    if (files.hasNext()) {
+        file = files.next();
+    } else {
+        return "";
+    };
+
+    var originSS = SpreadsheetApp.open(file);
+    var originSheet = originSS.getSheets()[1];
+    var originRange = originSS.getDataRange();
+    var originLastRow = originRange.getLastRow();
+
+    for (var x = 1; x <= originLastRow; x++) {
+
+        var entityName = originSheet.getRange(x + 1, 3).getValue();
+        var region = originSheet.getRange(x + 1, 10).getValue();
+        var PVAL = originSheet.getRange(x + 1, 21).getValue();
+        var researcher = originSheet.getRange(x + 1, 34).getValue();
+        var roundInput = originSheet.getRange(x + 1, 33).getValue();
+
+        var RAname = "";
+
+        switch (researcher) {
+            case "name1@dowjones.com":
+                RAname = "Surname, Name";
+                break;
+            case "name2@dowjones.com":
+                RAname = "Surname2, Name2";
+                break;
+            case "name3@dowjones.com":
+                RAname = "Surname3, Name3";
+                break;
+        }
+
+        if (PVAL != "" && region != "China") {
+
+            ss.getRange(lastRow + x, 2).setValue(researcher);
+            ss.getRange(lastRow + x, 3).setValue(entityName);
+            ss.getRange(lastRow + x, 5).setValue("M&A");
+            ss.getRange(lastRow + x, 9).setValue(roundInput);
+        }
+    }
+}
