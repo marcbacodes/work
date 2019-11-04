@@ -1,0 +1,42 @@
+function pullBigRounds() {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var range = ss.getDataRange();
+    var values = range.getValues();
+    var lastRow = range.getLastRow();
+    var lastCol = range.getLastColumn();
+
+    var date = new Date();
+    var yesterday = new Date(date);
+    yesterday.setDate(date.getDate() - 1);
+    var yestFormat = Utilities.formatDate(new Date(yesterday), "GMT", "YYYYMMdd");
+    var fileName = "QA Report " + yestFormat;
+
+    var folderID = "1Nb5wqd0JuhowDiKy6ABMjz8JreLY3csb";
+
+    var file, files = DriveApp.getFilesByName("QA Report " + yestFormat);
+
+    if (files.hasNext()) {
+        file = files.next();
+    } else {
+        return "";
+    };
+
+    var originSS = SpreadsheetApp.open(file);
+    var originSheet = originSS.getSheets()[0];
+    var originRange = originSS.getDataRange();
+    var originLastRow = originRange.getLastRow();
+
+    for (var x = 1; x <= originLastRow; x++) {
+
+        var entityName = originSheet.getRange(x + 1, 3).getValue();
+        var region = originSheet.getRange(x + 1, 10).getValue();
+        var researcher = originSheet.getRange(x + 1, 32).getValue();
+        var roundInput = originSheet.getRange(x + 1, 31).getValue();
+
+        ss.getRange(lastRow + x, 5).setValue(entityName);
+        ss.getRange(lastRow + x, 6).setValue(region);
+        ss.getRange(lastRow + x, 9).setValue(researcher);
+        ss.getRange(lastRow + x, 11).setValue(roundInput);
+    }
+}
