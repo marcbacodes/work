@@ -1,0 +1,69 @@
+function pullMAs_noPVAL() {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getSheets()[2];
+    var range = ss.getDataRange();
+    var values = range.getValues();
+    var lastRow = range.getLastRow();
+    var lastCol = range.getLastColumn();
+
+    var date = new Date();
+    //var dateFormat=Utilities.formatDate(new Date(), "GMT", "YYYYMMdd");
+    var yesterday = new Date(date);
+    yesterday.setDate(date.getDate() - 1);
+    var yestFormat = Utilities.formatDate(new Date(yesterday), "GMT", "YYYYMMdd");
+    var fileName = "QA Report " + yestFormat;
+
+    var folderID = "1Nb5wqd0JuhowDiKy6ABMjz8JreLY3csb";
+
+    var file, files = DriveApp.getFilesByName("QA Report " + yestFormat);
+
+    if (files.hasNext()) {
+        file = files.next();
+    } else {
+        return "";
+    };
+
+    var originSS = SpreadsheetApp.open(file);
+    var originSheet = originSS.getSheets()[1];
+    var originRange = originSS.getDataRange();
+    var originLastRow = originRange.getLastRow();
+
+    for (var x = 1; x <= originLastRow; x++) {
+
+        var entityName = originSheet.getRange(x + 1, 3).getValue();
+        var country = originSheet.getRange(x + 1, 9).getValue();
+        var region = originSheet.getRange(x + 1, 10).getValue();
+        var PVAL = originSheet.getRange(x + 1, 21).getValue();
+        var acquirer = originSheet.getRange(x + 1, 25).getValue();
+        var researcher = originSheet.getRange(x + 1, 34).getValue();
+        var roundInput = originSheet.getRange(x + 1, 33).getValue();
+
+        if (PVAL == "" && region != "") {
+
+            ss.getRange(lastRow + x, 3).setValue("PVAL check only");
+            ss.getRange(lastRow + x, 4).setValue(entityName);
+            ss.getRange(lastRow + x, 5).setValue(region);
+            ss.getRange(lastRow + x, 8).setValue(acquirer);
+            ss.getRange(lastRow + x, 9).setValue(researcher);
+            ss.getRange(lastRow + x, 11).setValue(roundInput);
+
+        } else if (PVAL == "" && region == "") {
+
+            ss.getRange(lastRow + x, 3).setValue("PVAL check only");
+            ss.getRange(lastRow + x, 4).setValue(entityName);
+            ss.getRange(lastRow + x, 5).setValue(country);
+            ss.getRange(lastRow + x, 8).setValue(acquirer);
+            ss.getRange(lastRow + x, 9).setValue(researcher);
+            ss.getRange(lastRow + x, 11).setValue(roundInput);
+
+        } else if (PVAL != "" && region == "China") {
+
+            ss.getRange(lastRow + x, 3).setValue("Full check required");
+            ss.getRange(lastRow + x, 4).setValue(entityName);
+            ss.getRange(lastRow + x, 5).setValue(region);
+            ss.getRange(lastRow + x, 8).setValue(acquirer);
+            ss.getRange(lastRow + x, 9).setValue(researcher);
+            ss.getRange(lastRow + x, 11).setValue(roundInput);
+        }
+    }
+}
