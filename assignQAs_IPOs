@@ -7,7 +7,6 @@ function pullIPOs() {
     var lastCol = range.getLastColumn();
 
     var date = new Date();
-    //var dateFormat=Utilities.formatDate(new Date(), "GMT", "YYYYMMdd");
     var yesterday = new Date(date);
     yesterday.setDate(date.getDate() - 1);
     var yestFormat = Utilities.formatDate(new Date(yesterday), "GMT", "YYYYMMdd");
