@@ -1,0 +1,63 @@
+function pullIPOs() {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getSheets()[1];
+    var range = ss.getDataRange();
+    var values = range.getValues();
+    var lastRow = range.getLastRow();
+    var lastCol = range.getLastColumn();
+
+    var date = new Date();
+    //var dateFormat=Utilities.formatDate(new Date(), "GMT", "YYYYMMdd");
+    var yesterday = new Date(date);
+    yesterday.setDate(date.getDate() - 1);
+    var yestFormat = Utilities.formatDate(new Date(yesterday), "GMT", "YYYYMMdd");
+    var fileName = "QA Report " + yestFormat;
+
+    var folderID = "1Nb5wqd0JuhowDiKy6ABMjz8JreLY3csb";
+
+    var file, files = DriveApp.getFilesByName("QA Report " + yestFormat);
+
+    if (files.hasNext()) {
+        file = files.next();
+    } else {
+        return "";
+    };
+
+    var originSS = SpreadsheetApp.open(file);
+    var originSheet = originSS.getSheets()[2];
+    var originRange = originSS.getDataRange();
+    var originLastRow = originRange.getLastRow();
+
+    for (var x = 1; x <= originLastRow; x++) {
+
+        var entityName = originSheet.getRange(x + 1, 3).getValue();
+        var region = originSheet.getRange(x + 1, 10).getValue();
+        var researcher = originSheet.getRange(x + 1, 33).getValue();
+        var roundInput = originSheet.getRange(x + 1, 32).getValue();
+
+        ss.getRange(lastRow + x, 4).setValue(entityName);
+        ss.getRange(lastRow + x, 5).setValue(region);
+        ss.getRange(lastRow + x, 8).setValue(researcher);
+        ss.getRange(lastRow + x, 10).setValue(roundInput);
+
+    }
+    assignIPOs(ss, lastRow);
+}
+
+function assignIPOs(ss, lastRow) {
+
+    for (var y = 380; y <= 750; y++) { // this doesn't work with y<=lastRow so needs to be updated every so often
+
+        var assignedTo = ss.getRange(y + 1, 1).getValue();
+        var newEntityName = ss.getRange(y + 1, 4).getValue();
+        var newRegion = ss.getRange(y + 1, 5).getValue();
+        var newResearcher = ss.getRange(y + 1, 8).getValue();
+        var newRoundInput = ss.getRange(y + 1, 10).getValue();
+
+        if (newRegion == "Europe") {
+            ss.getRange(y + 1, 1).setValue("Name1");
+        } else if (newRegion == "United States" || newRegion == "Japan") {
+            ss.getRange(y + 1, 1).setValue("Name2");
+        }
+    }
+}
