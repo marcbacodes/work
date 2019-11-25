@@ -1,0 +1,43 @@
+function bigRoundstoPRQA() {
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var range = ss.getDataRange();
+    var values = range.getValues();
+    var lastRow = range.getLastRow();
+    var lastCol = range.getLastColumn();
+
+    //var fileName = "QA List Hub (live)";
+
+    var folderID = "0AIDGXGh1nH1OUk9PVA";
+
+    var file, files = DriveApp.getFilesByName("QA List Hub (live)");
+
+    if (files.hasNext()) {
+        file = files.next();
+    } else {
+        return "";
+    };
+
+    var originSS = SpreadsheetApp.open(file);
+    var originSheet = originSS.getSheets()[0];
+    var originRange = originSS.getDataRange();
+    var originLastRow = originRange.getLastRow();
+
+    for (var x = 1620; x <= originLastRow; x++) {
+
+        var assignedTo = originSheet.getRange(x + 1, 1).getValue();
+        var QAstatus = originSheet.getRange (x + 1, 2).getValue();
+        var entityName = originSheet.getRange(x + 1, 5).getValue();
+        var researcher = originSheet.getRange(x + 1, 9).getValue();
+        var roundInput = originSheet.getRange(x + 1, 11).getValue();
+
+        if (assignedTo=="Marc B" || assignedTo=="Maria L") {
+          
+            ss.getRange(lastRow + x, 2).setValue(researcher);
+            ss.getRange(lastRow + x, 3).setValue(entityName);
+            ss.getRange(lastRow + x, 5).setValue("Big Rd");
+            ss.getRange(lastRow + x, 9).setValue(roundInput);
+            ss.getRange(lastRow + x, 19).setValue(assignedTo)
+            }
+        }
+    }
