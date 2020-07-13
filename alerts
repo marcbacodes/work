@@ -1,0 +1,31 @@
+function sendAlert() {
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[2];
+    var range = sheet.getDataRange();
+    var values = range.getValues();
+    var lastRow = sheet.getLastRow() - 1;
+    var lastCol = sheet.getLastColumn();
+
+    for (var x = 1; x <= lastRow; x++) {
+
+        var today = new Date();
+        var millisPerDay = 1000 * 24 * 60 * 60;
+        //var formatToday=Utilities.formatDate(new Date(today), "GMT+2", "dd-MM-YYYY");
+        var dayOfWeek = sheet.getRange(x + 1, 1).getValue();
+        var dateOfMonitoring = sheet.getRange(x + 1, 2).getValue();
+        var formatDateOfMon = Utilities.formatDate(new Date(dateOfMonitoring), "GMT+2", "dd-MMM-YYYY");
+        var tomorrow = new Date(today.getTime() + millisPerDay);
+        var formatTomorrow = Utilities.formatDate(new Date(tomorrow), "GMT+2", "dd-MMM-YYYY");
+        var weekend = new Date(today.getTime() + millisPerDay * 3);
+        var formatWeekend = Utilities.formatDate(new Date(weekend), "GMT+2", "dd-MMM-YYYY");
+        var emailAddress = sheet.getRange(x + 1, 3).getValue();
+        var email = "marc.bisbalarias@dowjones.com";
+        var subject = emailAddress;
+        var message = "India Monitoring is due on " + dayOfWeek + " (" + formatDateOfMon + ").";
+
+        if (dayOfWeek != "Monday" && formatTomorrow == formatDateOfMon) {
+            MailApp.sendEmail(email, "One", message)
+        } else if (dayOfWeek == "Monday" && formatWeekend == formatDateOfMon) {}
+        MailApp.sendEmail(email, "Two", message)
+    }
+}
